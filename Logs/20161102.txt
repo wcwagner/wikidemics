@@ -1,8 +1,4 @@
-
-Installing IPython in virtualenv quac
-*http://jeffskinnerbox.me/posts/2013/Oct/06/ipython-notebook-in-virtualenv/
-
-Setting up jupyter notebook to recognize virtualenv kernel
+Installing ipykernel on virtualenv
 
 python -m ipykernel install --user --name quac --display-name "Python 3.4 (quac)"
 

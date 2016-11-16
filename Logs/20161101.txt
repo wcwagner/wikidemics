@@ -18,22 +18,3 @@ NOTE: Content of pagecounts-all-sites:
         -de.m.voy Berlin 176 314159
             * 176 requests to de.m.wikivoyage.org/wiki/Berlin w/ 314159 response bytes
         *File is sorted by domain_code and page_title
-
-NOTE: quac/lib/u.py:l
-        -Logging object
-
-PageviewAPI
-    -Since the end of 2015, Wikimedia has supported the new pageviews API, maybe consider using this instead?
-
-
-
-Creating .cfg file to load access-logs onto my harddrive
-
-NOTE: "/raw" is appened to `access_log_dir`
-
-Started collecting data into
-    /media/william/passport/AccessLogs/Raw
-Using rsync mirror
-    rsync://ftpmirror.your.org/wikimedia-dumps/other/pagecounts-raw/
-    *this is limited to 256kb/sec
-

@@ -1,0 +1,18 @@
+https://stackoverflow.com/questions/2839321/connect-java-to-a-mysql-database/2840358#2840358
+
+mysql> CREATE DATABASE wikistats DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+mysql> CREATE USER 'wikistats'@'localhost' IDENTIFIED BY 'password';
+mysql> GRANT ALL ON wikistats.* TO 'wikistats'@'localhost' IDENTIFIED BY 'password';
+
+JDBC URL:
+    jdbc:mysql://localhost:3306/wikistats?user=wikistats&password=passwd
+
+Test JDBC Connector by running the jdbc.java file:
+    java jdbc
+
+To run the spark script, the class path for the JDBC connection must be provided:
+
+    /usr/local/spark/bin/spark-submit --jars "/home/william/Downloads/mysql-connector-java-5.1.40/mysql-connector-java-5.1.40-bin.jar" ~/wikidemics/wiki_agg.py
+
+Still need to do more effective filtering on the pagecounts files.
+It took roughly 15 minutes to process 1 day on my desktop computer.

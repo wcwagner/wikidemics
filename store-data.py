@@ -7,18 +7,21 @@ For ease of use, the API responses are also stored into pandas DataFrames, which
 
 The format of the pageviews_df is:
 
-Epiweek(Index), Amatadine, ..., Influenza
-200801          1024,      ..., 5424
-...
-201652          4385,      ..., 10905
+    Epiweek(Index), Amatadine, ..., Influenza
+    200801          1024,      ..., 5424
+    ...
+    201652          4385,      ..., 10905
 
 The format of the wILI_df is:
 
-Epiweek(Index), Weekly ILI
-200801          1.423
-...
-201652          3.019
+    Epiweek(Index), Weekly ILI
+    200801          1.423
+    ...
+    201652          3.019
 
+
+Usage:
+    python3 store-data.py
 """
 
 
@@ -31,7 +34,7 @@ import os
 FLU_RELATED_ARTICLES = [
     'amantadine', 'antiviral_drugs', 'avian_influenza', 'canine_influenza', 'cat_flu', 'chills', 'common_cold', 'cough',
     'equine_influenza', 'fatigue_(medical)', 'fever', 'flu_season', 'gastroenteritis', 'headache',
-    'hemagglutinin_(influenza)', 'human_flu', 'influenza', 'influenzalike_illness', 'influenzavirus_a',
+    'hemagglutinin_(influenza)', 'human_flu', 'influenza', 'influenzavirus_a',
     'influenzavirus_c', 'influenza_a_virus', 'influenza_a_virus_subtype_h10n7', 'influenza_a_virus_subtype_h1n1',
     'influenza_a_virus_subtype_h1n2', 'influenza_a_virus_subtype_h2n2', 'influenza_a_virus_subtype_h3n2',
     'influenza_a_virus_subtype_h3n8', 'influenza_a_virus_subtype_h5n1', 'influenza_a_virus_subtype_h7n2',
@@ -100,20 +103,28 @@ if __name__ == '__main__':
         # 2008 and 2014 have 53rd epiweek
         yr_end = int(str(yr) + '53') if yr in [2008, 2014] else int(str(yr) + '52')
         yr_epiweek_range = EPIDATA.range(yr_start, yr_end)
+        print(f'Requesting pagevies from {yr_start} to {yr_end}')
         yr_pageviews = get_wiki_pageviews(FLU_RELATED_ARTICLES, epiweeks_rng=yr_epiweek_range)
         yr_pageviews_df = create_pageviews_df(yr_pageviews)
         # extend both data structures to include this year
         pageviews.extend(yr_pageviews)
         pageviews_df = pd.concat([pageviews_df, yr_pageviews_df])
 
-    pageviews_df.sort_index()  # sort by epiweek
+    # clean up DF before pickling
+    pageviews_df = pageviews_df.fillna(pageviews_df.median())
+    pageviews_df = pageviews_df.astype(int)
+    pageviews_df.sort_index()
+
+    # pickle both the raw API pageview responses and the pageview dataframe
     with open(os.path.join(os.getcwd(), DATA_PATH, 'pageviews.pickle'), 'wb') as handle:
         pickle.dump(pageviews, handle, protocol=pickle.HIGHEST_PROTOCOL)
     with open(os.path.join(os.getcwd(), DATA_PATH, 'pageviews-df.pickle'), 'wb') as handle:
         pickle.dump(pageviews_df, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    wILI = get_wILI(epiweeks_rng=EPIDATA.range(200801, 201730))
+    wILI = get_wILI(epiweeks_rng=EPIDATA.range(200801, 201652))
     wILI_df = create_wILI_df(wILI)
+
+    # pickle both the raw API wILI response and the wILI datafarme
     with open(os.path.join(os.getcwd(), DATA_PATH, 'wILI.pickle'), 'wb') as handle:
         pickle.dump(wILI, handle, protocol=pickle.HIGHEST_PROTOCOL)
     with open(os.path.join(os.getcwd(), DATA_PATH, 'wILI-df.pickle'), 'wb') as handle:

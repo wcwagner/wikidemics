@@ -41,7 +41,6 @@ class Epidata:
   def _request(params):
     """Request and parse epidata."""
     try:
-      print(Epidata.BASE_URL, params)
       # API call
       return requests.get(Epidata.BASE_URL, params).json()
     except Exception as e:
